@@ -1,8 +1,10 @@
 package com.example.jetweatherforcast.screen.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.jetweatherforcast.navigation.WeatherScreens
 import com.example.jetweatherforcast.widgets.WeatherAppBar
 
 @Composable
@@ -48,28 +51,39 @@ fun SearchScreen(navController: NavController) {
                 .padding(top = 100.dp)
         ) {
             Column(
-                verticalArrangement = Arrangement.Center,
+//                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                SearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(alignment = Alignment.CenterHorizontally)
+                ) { mCity ->
+                    navController.navigate(WeatherScreens.MainScreen.name + "/$mCity")
+                }
             }
         }
     }
 }
 
 @Composable
-fun SearchBar(onSearch: (String) -> Unit) {
+fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
     val searchQueryState = rememberSaveable() { mutableStateOf("") }
     val keyBoardController = LocalSoftwareKeyboardController.current
     val valid = remember(searchQueryState.value) {
-        searchQueryState.value.trim().isNotBlank()
+        searchQueryState.value.trim().isNotEmpty()
     }
 
     Column {
         CommonTextField(
             valueState = searchQueryState,
             placeholder = "Seattle",
-            onAction = KeyboardActions {})
+            onAction = KeyboardActions {
+                if (!valid) return@KeyboardActions
+                onSearch(searchQueryState.value.trim())
+                keyBoardController?.hide()
+            })
     }
 
 }
@@ -95,7 +109,7 @@ fun CommonTextField(
             cursorColor = Color.Black
         ), shape = RoundedCornerShape(15.dp),
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp)
     )
 }

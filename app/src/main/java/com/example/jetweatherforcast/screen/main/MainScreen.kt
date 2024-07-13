@@ -1,22 +1,18 @@
 package com.example.jetweatherforcast.screen.main
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,24 +22,16 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import com.example.jetweatherforcast.R
 import com.example.jetweatherforcast.data.DataOrException
 import com.example.jetweatherforcast.model.Weather
 import com.example.jetweatherforcast.model.WeatherItem
 import com.example.jetweatherforcast.navigation.WeatherScreens
 import com.example.jetweatherforcast.utils.formatDate
-import com.example.jetweatherforcast.utils.formatDateTime
 import com.example.jetweatherforcast.utils.formatDecimals
 import com.example.jetweatherforcast.widgets.HumidityWindPressureRow
 import com.example.jetweatherforcast.widgets.SunsetSunriseRow
@@ -52,16 +40,21 @@ import com.example.jetweatherforcast.widgets.WeatherDetailRow
 import com.example.jetweatherforcast.widgets.WeatherStateImage
 
 @Composable
-fun MainScreen(navController: NavController, viewModel: MainViewModel = hiltViewModel()) {
-    mainScreen(viewModel, navController)
+fun MainScreen(
+    navController: NavController,
+    viewModel: MainViewModel = hiltViewModel(),
+    city: String?
+) {
+    mainScreen(viewModel, navController , city )
+    Log.d("CITY", "MainScreen: $city")
 }
 
 @Composable
-fun mainScreen(viewModel: MainViewModel, navController: NavController) {
+fun mainScreen(viewModel: MainViewModel, navController: NavController, city: String?) {
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = viewModel.getWeatherData(city = "istanbul")
+        value = viewModel.getWeatherData(city = city.toString())
     }.value
 
     if (weatherData.loading == true) {
