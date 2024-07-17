@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JetWeatherForcast</string>
+    <string name="about_app">Weather App Version 1.0.0</string>
 </resources>
