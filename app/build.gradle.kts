@@ -80,8 +80,10 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     // Room dependencies
+    implementation (libs.symbol.processing.api)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+    ksp (libs.androidx.room.compiler.v242)
     implementation(libs.androidx.room.ktx) // use this for Coroutines support
 
     // Coil
